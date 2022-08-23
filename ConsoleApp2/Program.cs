@@ -164,6 +164,7 @@ string PapagoTranslate(string TranslateText)
         //Translatecount++;
         //return PapagoTranslate(TranslateText);
         Environment.Exit(0);
+        return null;
     }
 }
 
@@ -319,7 +320,7 @@ void JPtobackupJP()
 {
     try
     {
-        backupjpFiles = Directory.GetFiles("C:\\Users\\gustj\\Desktop\\유틸리티\\파판14 한글패치\\AllaganNode\\output\\exd", "jp1", SearchOption.AllDirectories);
+        backupjpFiles = Directory.GetFiles("C:\\Users\\gustj\\Desktop\\유틸리티\\파판14 한글패치\\AllaganNode\\output\\exd", "ja1", SearchOption.AllDirectories);
     }
     catch (IOException ex)
     {
@@ -392,7 +393,7 @@ void JPtobackupJP()
 }
 
 //JPtoKR();
-JPtoBackup();
+JPtobackupJP();
 Console.WriteLine("F");
 
 public class datamodel
