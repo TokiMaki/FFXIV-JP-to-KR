@@ -5,98 +5,188 @@ using System;
 using System.Net;
 using System.Text;
 using System.IO;
+using System.Numerics;
 
 Console.WriteLine("Hello, World!");
 string[] koFiles = { "", };
 string[] jpFiles = { "", };
 string[] backupjpFiles = { "", };
-string[] clientID = { "92Sphm95Rb3BovoOoocL",
-    "QENw_ceZhxwbP65RKJKD",
-    "HyNx0lOiEyj6xBfYNByk",
-    "KVP8mrJViAbOSCHUpU6V",
-    "_3tAHggjENRP5pG_V59o",
-    "7r2egzcSdZAH3lz4JZMM",
-    "sPGZS6HX_te6YlBadUJc",
-    "VBpAKKqyd0gpeBsKUxTr",
-    "B1pFC5eUEUW4xngjn1Xv",
-    "nU407q3GZKGhm4FMYOfU",
+;
+string[] clientID = { "0yIjmTIHgY55gV0YLn1t",
+    "1diyex9YS4dgzlB4snbH",
+    "3N0APG6TUX8hFTMYXkW1",
+    "4jnBi_joxX0RUCJStA8V",
+    "4npNPAJSnHQourFgo16s",
+    "4nuw6WIXPZawZUp4XPUq",
+    "5sRHBiRovInXCBFIccb8",
+    "6cy6BqujgRGKjFfvWPAa",
+    "ArIK2vwVeaXt2jERXIQe",
+    "C_TjTzOMxJDusPlpA0G6",
 
-    "dS9JKz5j2h9pDyU6BloN",
-    "ZC1nGrkZ5jlUWXjsyXod",
-    "jWnFNiNlxrgn00sl9A_M",
-    "utzCAk9AbPRZku7HUW1A",
-    "BP1jMiY36srLlIRKAdwm",
-    "wqnajSiJB5TBmfOQgKBT",
-    "yOhgWvInFGgpv7gsNojY",
-    "Ij8TzF67n9U66TLMq1o0",
-    "VS4nZfRMH13jcCOG2m82",
-    "TU9ChoOEyJfHkjOUrBvq",
+    "DE2Sn2t2mdjZJdfBwIaK",
+    "L4JcTAI6uFlKK6v_5V_y",
+    "M7ekziJClHVhdBabApjb",
+    "QsNibmVqNQfx8QUokGLC",
+    "T5HGlE2pD6tC6ZGQTccc",
+    "WVMN7iNlIGlZOs_DHu4q",
+    "XhHrCRKJIUfh8SXsMryr",
+    "Y0pD2EI7drmypH_X8_hV",
+    "YwxqUN4TPwle3IgFcjvy",
+    "_9qx1l45xZUsaTEyOfwA",
 
-    "XnNxq1eTAa8zA6yhXhqx",
-    "aGfBqWotnUOWrSEQDa5I",
-    "GNkd4T7gHba39Cczhzqc",
-    "xSG0ieO2tE9IM9JO7Fu_",
-    "uKO_jA5KoFKyZrolPjaG",
-    "XG9DJzhiyVGIMrYAN7VF",
-    "yoh4Myi0K_viycx4RxW7",
-    "7dGExnbHazO2GyB7lYDM",
-    "TK70XyDRUC3YWZJQUCk5",
-    "2R7LjXTgd4kbbEdgCDdg",
+    "dOJcRXWnKMHZSMK6SeQU",
+    "e0heVQPWMTTVljk4TKKF",
+    "eYtSYfTNIOPEVbaqX1L9",
+    "iTwQvWbWSpb97nno44KU",
+    "k8Jje3tKYd5CFEcLf0Cp",
+    "lSoKofubO0SRQwdlv6oz",
+    "pTQw95RNKpODV5hPNzG6",
+    "rsCsg3WAf_bKUh6b7wnj",
+    "rxJChoV7thHZ8NEa9T0c",
+    "w28Oyv_sY0c6mo_8i26M",
 
-    "sWb1xMT25BCEpOtH6UtK",
-    "vk8oNh63RbEjo8bWx6gs",
-    "2kgBrwqQzaR4cuFvfBoF",
-    "_oT1bfw4hDsdLXRv9L82",
-    "SpT7xSFhTCu_vH4iQ6jr",
-    "Fuudtxwi_nxUdKT3KLJX",
-    "1_IYCSk985oXidAr7Ui1",
-    "LAxjVVUP7RGAqvuvaQbb",
-    "_TK3qPkyQS8gvYKU1zhb",
-    "SWgpd_yLbt4ACRCSyo1Y",
-    };
-string[] clientSecret = { "b2coWb9mA1",
-    "ZiEIDPzJE6",
-    "EmMkVJRt2p",
-    "Ot0ioLOh0_",
-    "ELTbSdaWAw",
-    "pm8jjF5fON",
-    "Dtgy34EMEh",
-    "dv2mqac7RK",
-    "3Nmo39m2GD",
-    "qMgQj3tXUc",
+    "wLi4fGTILfP5OWh0zBKg",
+    "zLfczRfmNPBll4tJyEWL",
+    "zaRGBsPKQTztCLQe0Kw5",
+    
+    //--------------------------------------------
 
-    "KUM4SmNhYA",
-    "ip_CLzkHHV",
-    "a7MuxpYc49",
-    "whuM7yUVTO",
-    "ImsK1h0Nv8",
-    "OZU4NXz329",
-    "P9osNFfYww",
-    "HbVjSuHvJA",
-    "uT2gRQFDRC",
-    "ijOtcBVg8o",
+    "AgFZ3YzGty6w3CeaCVeB",
+    "BRpBPXrsyDxpA0GNSNjQ",
+    "CGxaLwb0nOAVYkTleK4i",
+    "E8Km52WjoYIdvwUm3Tdd",
+    "LhdwfS8LuVnWum8fr_um",
+    "No3u8q7cAl75XvO5aSoy",
+    "PqbfNBDaZAll7GhsQEM0",
+    "Rryc81OR3PQYBV9q2pYq",
+    "dd1pFFlARfLCB_ivOQgM",
+    "hDB8vVjex1egERRquiIe",
 
-    "hp_FFJViUi",
-    "GqOkTcDe7S",
-    "kg1CRC4kU3",
-    "MjWdk2aF1O",
-    "2CaLqeB3MC",
-    "BhhKXPqneB",
-    "VwNrs3CgsG",
-    "CActkv3sLm",
-    "atRrpEDzSp",
-    "yCo2I9HmWt",
+    "jWn5_V7WXT4VFJ8VPLWW",
+    "r6uuh9tCRrFuVJPYowXf",
+    "yDFkO3l3sDolxSb90815",
 
-    "lmS4VIrWhV",
-    "FJ2GMysfiD",
-    "nrmUAag6N8",
-    "bLjMFiGDlP",
-    "5RwLe2RGpI",
-    "YnHqfxbVME",
-    "5G5NDF2brO",
-    "mzwN7tpjny",
-    "CbXEEEIKoo",
-    "_lILYRIEQ7",
+    //--------------------------------------------
+    
+    "1exj1JukygGxKyynDcTt",
+    "1flFyuQVE3HjOBdSfweX",
+    "2NEqe5ybmyBwWyyqq85e",
+    "47UKEG1LxgSxogS5csCJ",
+    "8IJbktFUrXOmVIntbOE4",
+    "Aoe_cUiOnQldX3A4YbZA",
+    "GPILTauOWOjta5wGBQMU",
+    "IFxvx_Ac_6H1kE46stWU",
+    "JGVp8DEQdmbjxm_qiF4b",
+    "Kt6m0OPY1kmsCSfzfYY9",
+
+    "Kt75qBCOyRCyKCgS4CCP",
+    "L9MFTWELA8zQwIpw3uGf",
+    "OThuT12jZwVSLoEJXvWi",
+    "SizDaISeqL3EN1u8ZADi",
+    "YsD5wz6OpTw1y_dI3_g3",
+    "a3Q1LRG7OX_1i87S8R1K",
+    "bG3yF6PHIiSqzy0OVjsf",
+    "dged1mJP6g2d6_TlkvpW",
+    "e4l8t3JF2TMOF0hwbUK_",
+    "eAVrMkpanTUIBi7JqvTI",
+
+    "eqBxCajwlxI4C1ImTAgt",
+    "fxGYhTHgFeWOEqd0wUIr",
+    "jKGZTyCT6ngHxfgebvBK",
+    "mZLWBtb2PIlkJNm0R5kB",
+    "tBV9YZSLKZh3ASkbZ2Za",
+    "tSYLmJOd1LgXiCncAAcF",
+    "zP2fIOw3fg_O9QgrLKIF",
+
+
+
+};
+string[] clientSecret = { "csv0AFQpS4",
+    "2A8viQI3Uz",
+    "MRo6YpNwIW",
+    "r9A9YAfqOD",
+    "aruuu7ppqW",
+    "sUm3rrNbhz",
+    "4CWE9lXdZl",
+    "ac190n0Gi3",
+    "Ua4ShEnQZX",
+    "NxJhmzaIh8",
+
+    "MBUm0h9whK",
+    "4HJGla6gS9",
+    "bDQCluolM1",
+    "grCrlBQv77",
+    "NlaHGBpnPq",
+    "awTX2eex0I",
+    "2f6ZFVqKoA",
+    "KdpgEK2nC2",
+    "_tWle22lro",
+    "xQvJmWi3tY",
+
+    "dh730jgseD",
+    "sJ9pIFluVT",
+    "1VwZ1cI7DO",
+    "CCZfecfm6o",
+    "CbXlR7rW2J",
+    "wOGUdjsKpa",
+    "Rsetczj3Xm",
+    "s5JxZ4ttvy",
+    "e1cR6wyIcA",
+    "mrpNGlzS4j",
+
+    "xVAiWoVVYZ",
+    "Qz0t0_fNyF",
+    "5rAD3vuPwc",
+
+    //--------------------------------------------
+
+    "HMj_oCr_wH",
+    "QTvJHB5yP8",
+    "o7paGKa4xw",
+    "nS7b7rdZ34",
+    "pwtFNUYM4q",
+    "nxTjBonAs1",
+    "P1Pq_FrKxD",
+    "48Sh7laO1O",
+    "bTwpgoLQop",
+    "X9Gge8ntJ4",
+
+    "DWw9Aha7ld",
+    "iviJKcoMYq",
+    "r1GQFhvVF4",
+
+    //--------------------------------------------
+    
+    "sX5ssivBDF",
+    "TstF_x_B4z",
+    "p62aZBULfZ",
+    "VDnVsOEmcv",
+    "0sUVR98aQc",
+    "usa0OYnuPf",
+    "43TsGl99Pm",
+    "oRSv3JrJcU",
+    "BZgsE6JIBG",
+    "P2g7ZdxMBj",
+
+    "czg1mEMKk6",
+    "bD2W8VVgYV",
+    "4F6XobkXV9",
+    "zAYHolo8da",
+    "7WBXBpbJd2",
+    "T6H_x0iVCO",
+    "7tiYP7eO1P",
+    "E4sW3fNeVO",
+    "aLsnciZIFU",
+    "Cl0c519Baf",
+
+    "PheQ0tgKCe",
+    "vS7dTk2lkl",
+    "vhFI8ZawF1",
+    "oXyDwqPGQT",
+    "B0_UhULQFi",
+    "r3rfP90UrN",
+    "UDePl1Jgn0",
+
     };
 int Translatecount = 0;
 
@@ -141,6 +231,10 @@ string PapagoTranslate(string TranslateText)
         request.Headers.Add("X-Naver-Client-Secret", clientSecret[Translatecount]);
         request.Method = "POST";
         string query = TranslateText;
+        if (query.Contains("、"))
+            query = query.Replace("、", ", ");
+        query = query.Replace("%", "パーセント");
+        query = query.Replace("。", ". ");
         byte[] byteDataParams = Encoding.UTF8.GetBytes("source=ja&target=ko&text=" + query);
         request.ContentType = "application/x-www-form-urlencoded";
         request.ContentLength = byteDataParams.Length;
@@ -158,11 +252,13 @@ string PapagoTranslate(string TranslateText)
         Console.WriteLine(text);
         return myDeserializedClass.message.result.translatedText;
     }
-    catch (IOException ex)
+    catch (Exception ex)
     {
-        Console.WriteLine(ex.Message);
-        //Translatecount++;
-        //return PapagoTranslate(TranslateText);
+        if (ex.Message.Contains("429"))
+        {
+            Translatecount++;
+            return PapagoTranslate(TranslateText);
+        }
         Environment.Exit(0);
         return null;
     }
@@ -209,7 +305,6 @@ void JPtoKR()
         }
         if (loop >= jpFiles.Length) continue;
 
-
         StreamReader jpsr = new StreamReader(jpFilePath);
         string jpData = jpsr.ReadToEnd();
         jpsr.Close();
@@ -225,14 +320,24 @@ void JPtoKR()
             var target = koDataList.Find(x => jp.Key == x.Key);
             if (target != null)
             {
+                if (jp.Fields.Count != target.Fields.Count) continue;
                 for (int i = 0; i < target.Fields.Count; i++)
                 {
+                    if (jp.Fields[i].FieldValue.Count != target.Fields[i].FieldValue.Count) continue;
                     for (int j = 0; j < target.Fields[i].FieldValue.Count; j++)
-                        if (target.Fields[i].FieldValue[j].EntryType == "text")
-                            jp.Fields[i].FieldValue[j].EntryValue = target.Fields[i].FieldValue[j].EntryValue;
+                        if (jp.Fields[i].FieldValue.Any()
+                            && jp.Fields[i].FieldValue[j].EntryType == "text"
+                            && target.Fields[i].FieldValue[j].EntryType == "text")
+                        {
+                            if (isjpCheck(jp.Fields[i].FieldValue[j].EntryValue.ToString()) && iskoCheck(target.Fields[i].FieldValue[j].EntryValue.ToString()))
+                            {
+                                jp.Fields[i].FieldValue[j].EntryValue = target.Fields[i].FieldValue[j].EntryValue;
+                            }
+                        }
                 }
             }
         }
+        Console.WriteLine(loop + "/" + jpFiles.Length);
         string output = JsonConvert.SerializeObject(jpDataList, Formatting.Indented);
         FileStream fs = File.Create(jpFilePath);
         fs.Close();
@@ -270,11 +375,26 @@ void JPtoPapagoKR()
                 for (int j = 0; j < jp.Fields[i].FieldValue.Count; j++)
                     if (jp.Fields[i].FieldValue[j].EntryType == "text")
                     {
-                        string PapagoTranslateTextString = PapagoTranslate(jp.Fields[i].FieldValue[j].EntryValue.ToString());
-                        if (jpTargetFilePath.Contains("Item"))
-                            jp.Fields[i].FieldValue[j].EntryValue += "" + jp.Fields[i].FieldValue[j].EntryValue.ToString();
-                        else
-                            jp.Fields[i].FieldValue[j].EntryValue = PapagoTranslateTextString;
+                        if (isjpCheck(jp.Fields[i].FieldValue[j].EntryValue.ToString()))
+                        {
+                            string PapagoTranslateTextString =
+                                PapagoTranslate(jp.Fields[i].FieldValue[j].EntryValue.ToString());
+                            if (jpTargetFilePath.Contains("Item") && PapagoTranslateTextString != null)
+                            {
+                                Console.WriteLine(jp.Fields[i].FieldValue[j].EntryValue + " -> " +
+                                                  PapagoTranslateTextString);
+                                jp.Fields[i].FieldValue[j].EntryValue +=
+                                    "" + jp.Fields[i].FieldValue[j].EntryValue.ToString();
+                            }
+                            else
+                            {
+                                Console.WriteLine(jp.Fields[i].FieldValue[j].EntryValue + " -> " +
+                                                  PapagoTranslateTextString);
+                                jp.Fields[i].FieldValue[j].EntryValue = PapagoTranslateTextString;
+                            }
+                        }
+                        jp.Fields[i].FieldValue[j].EntryValue =
+                            jp.Fields[i].FieldValue[j].EntryValue.ToString().Replace("퍼센트", "%");
                     }
             }
         }
@@ -393,9 +513,9 @@ void JPtobackupJP()
 }
 
 //JPtoKR();
-JPtobackupJP();
+//JPtobackupJP();
+JPtoPapagoKR();
 Console.WriteLine("F");
-
 public class datamodel
 {
     public int Key { get; set; }
