@@ -60,11 +60,7 @@ string[] clientID = { "0yIjmTIHgY55gV0YLn1t",
     "PqbfNBDaZAll7GhsQEM0",
     "Rryc81OR3PQYBV9q2pYq",
     "dd1pFFlARfLCB_ivOQgM",
-    "hDB8vVjex1egERRquiIe",
-
-    "jWn5_V7WXT4VFJ8VPLWW",
-    "r6uuh9tCRrFuVJPYowXf",
-    "yDFkO3l3sDolxSb90815",
+    "zimG6sulUits1n95ZG5D",
 
     //--------------------------------------------
     
@@ -149,11 +145,7 @@ string[] clientSecret = { "csv0AFQpS4",
     "P1Pq_FrKxD",
     "48Sh7laO1O",
     "bTwpgoLQop",
-    "X9Gge8ntJ4",
-
-    "DWw9Aha7ld",
-    "iviJKcoMYq",
-    "r1GQFhvVF4",
+    "YFpQcMWRxM",
 
     //--------------------------------------------
     
@@ -203,7 +195,7 @@ bool isjpCheck(string str)
         return true;
     }
     else
-    {
+    {   
         return false;
     }
 }
@@ -235,6 +227,10 @@ string PapagoTranslate(string TranslateText)
             query = query.Replace("、", ", ");
         query = query.Replace("%", "パーセント");
         query = query.Replace("。", ". ");
+        query = query.Replace("「", "\'");
+        query = query.Replace("」", "\'");
+        query = query.Replace("『", "\"");
+        query = query.Replace("』", "\"");
         byte[] byteDataParams = Encoding.UTF8.GetBytes("source=ja&target=ko&text=" + query);
         request.ContentType = "application/x-www-form-urlencoded";
         request.ContentLength = byteDataParams.Length;
@@ -329,7 +325,7 @@ void JPtoKR()
                             && jp.Fields[i].FieldValue[j].EntryType == "text"
                             && target.Fields[i].FieldValue[j].EntryType == "text")
                         {
-                            if (isjpCheck(jp.Fields[i].FieldValue[j].EntryValue.ToString()) && iskoCheck(target.Fields[i].FieldValue[j].EntryValue.ToString()))
+                            if (iskoCheck(target.Fields[i].FieldValue[j].EntryValue.ToString()))
                             {
                                 jp.Fields[i].FieldValue[j].EntryValue = target.Fields[i].FieldValue[j].EntryValue;
                             }
@@ -375,26 +371,76 @@ void JPtoPapagoKR()
                 for (int j = 0; j < jp.Fields[i].FieldValue.Count; j++)
                     if (jp.Fields[i].FieldValue[j].EntryType == "text")
                     {
-                        if (isjpCheck(jp.Fields[i].FieldValue[j].EntryValue.ToString()))
+                        if (isjpCheck(jp.Fields[i].FieldValue[j].EntryValue.ToString()) && iskoCheck(jp.Fields[i].FieldValue[j].EntryValue.ToString()))
                         {
                             string PapagoTranslateTextString =
                                 PapagoTranslate(jp.Fields[i].FieldValue[j].EntryValue.ToString());
-                            if (jpTargetFilePath.Contains("Item") && PapagoTranslateTextString != null)
+                            if (PapagoTranslateTextString != null)
                             {
-                                Console.WriteLine(jp.Fields[i].FieldValue[j].EntryValue + " -> " +
-                                                  PapagoTranslateTextString);
-                                jp.Fields[i].FieldValue[j].EntryValue +=
-                                    "" + jp.Fields[i].FieldValue[j].EntryValue.ToString();
-                            }
-                            else
-                            {
-                                Console.WriteLine(jp.Fields[i].FieldValue[j].EntryValue + " -> " +
-                                                  PapagoTranslateTextString);
-                                jp.Fields[i].FieldValue[j].EntryValue = PapagoTranslateTextString;
+                                if (jpTargetFilePath.Contains("Item"))
+                                {
+                                    Console.WriteLine(jp.Fields[i].FieldValue[j].EntryValue + " -> " +
+                                                      PapagoTranslateTextString);
+                                    jp.Fields[i].FieldValue[j].EntryValue +=
+                                        " " + jp.Fields[i].FieldValue[j].EntryValue.ToString();
+                                }
+                                else
+                                {
+                                    Console.WriteLine(jp.Fields[i].FieldValue[j].EntryValue + " -> " +
+                                                      PapagoTranslateTextString);
+                                    jp.Fields[i].FieldValue[j].EntryValue = PapagoTranslateTextString;
+                                }
                             }
                         }
+                    }
+            }
+        }
+        string output = JsonConvert.SerializeObject(jpDataList, Formatting.Indented);
+        FileStream fs = File.Create(jpFilePath);
+        fs.Close();
+        if (File.Exists(jpFilePath))
+            File.WriteAllText(jpFilePath, output);
+    }
+}
+
+
+void JPtoWritingSystem()
+{
+    try
+    {
+        jpFiles = Directory.GetFiles("C:\\Users\\gustj\\Desktop\\유틸리티\\파판14 한글패치\\AllaganNode\\output\\exd", "ja", SearchOption.AllDirectories);
+    }
+    catch (IOException ex)
+    {
+        Console.WriteLine(ex.Message);
+        return;
+    }
+    foreach (string jpFile in jpFiles)
+    {
+        string jpFilePath = jpFile;
+        string jpTargetFilePath = jpFilePath.Substring("C:\\Users\\gustj\\Desktop\\유틸리티\\파판14 한글패치\\AllaganNode\\output\\exd".Length + 1);
+        jpTargetFilePath = jpTargetFilePath.Substring(0, jpTargetFilePath.Length - 5);
+
+        StreamReader jpsr = new StreamReader(jpFilePath);
+        string jpData = jpsr.ReadToEnd();
+        jpsr.Close();
+        List<datamodel> jpDataList = JsonConvert.DeserializeObject<List<datamodel>>(jpData);
+
+        foreach (var jp in jpDataList)
+        {
+            for (int i = 0; i < jp.Fields.Count; i++)
+            {
+                for (int j = 0; j < jp.Fields[i].FieldValue.Count; j++)
+                    if (jp.Fields[i].FieldValue[j].EntryType == "text")
+                    {
                         jp.Fields[i].FieldValue[j].EntryValue =
                             jp.Fields[i].FieldValue[j].EntryValue.ToString().Replace("퍼센트", "%");
+                        jp.Fields[i].FieldValue[j].EntryValue =
+                            jp.Fields[i].FieldValue[j].EntryValue.ToString().Replace("에스티니안", "에스티니앙");
+                        jp.Fields[i].FieldValue[j].EntryValue = 
+                            jp.Fields[i].FieldValue[j].EntryValue.ToString().Replace("야 슈트라", "야슈톨라");
+                        jp.Fields[i].FieldValue[j].EntryValue = 
+                            jp.Fields[i].FieldValue[j].EntryValue.ToString().Replace("우리엔제", "위리앙제");
                     }
             }
         }
@@ -435,7 +481,6 @@ void JPtoBackup()
             File.WriteAllText(jpFilePath + "1", output);
     }
 }
-
 void JPtobackupJP()
 {
     try
@@ -515,6 +560,8 @@ void JPtobackupJP()
 //JPtoKR();
 //JPtobackupJP();
 JPtoPapagoKR();
+//JPtoWritingSystem();
+//JPtoWritingSystem();
 Console.WriteLine("F");
 public class datamodel
 {
