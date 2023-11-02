@@ -6,6 +6,8 @@ using System.Net;
 using System.Text;
 using System.IO;
 using System.Numerics;
+using System.Linq;
+using System.Reflection.Metadata;
 
 Console.WriteLine("Hello, World!");
 string[] koFiles = { "", };
@@ -93,8 +95,19 @@ string[] clientID = { "0yIjmTIHgY55gV0YLn1t",
     "tBV9YZSLKZh3ASkbZ2Za",
     "tSYLmJOd1LgXiCncAAcF",
     "zP2fIOw3fg_O9QgrLKIF",
-
-
+    
+    //--------------------------------------------
+    
+    "y_cvnM4AOTShks0RKBT_",
+    "PqdbWkz2QLYuTBOKH5qB",
+    "SwdAgLwTxpxJ623goUWh",
+    "GGdgJc8L3r4WcZsu5M0M",
+    "2JLQtVAy0yfFY6DsjPI9",
+    "qhqX4AgzXY9ClcvbqNth",
+    "z58HFwt8tWtnaeUpbN4i",
+    "ebrAwWrz4rub1jiXdsnV",
+    "gh4lUJb2mZTTaILmdRBc",
+    "iQKYCJaJiG2YFH9iADaq",
 
 };
 string[] clientSecret = { "csv0AFQpS4",
@@ -178,37 +191,54 @@ string[] clientSecret = { "csv0AFQpS4",
     "B0_UhULQFi",
     "r3rfP90UrN",
     "UDePl1Jgn0",
+    
+    //--------------------------------------------
+    
+    "SZLFWujIS7",
+    "Ew4jRfqIBN",
+    "fQ4dv5UF0d",
+    "HGCnDfRdAP",
+    "NQXXVT9HBa",
+    "zqZDVOfr5H",
+    "vsuaeAvdt8",
+    "ZpQ1ZXh0DX",
+    "8XDxFBZBSK",
+    "vNv8LySxLl",
 
     };
 int Translatecount = 0;
 
 bool isjpCheck(string str)
 {
-    ushort usr = BitConverter.ToUInt16(Encoding.Unicode.GetBytes(str), 0);
-
-    if ((usr >= 13312 && usr <= 19903) ||
-            (usr >= 19968 && usr <= 40895) ||
-            (usr >= 63744 && usr <= 64255) ||
-            (usr >= 12352 && usr <= 12447) ||
-            (usr >= 12448 && usr <= 12543))
+    char[] charArr = str.ToCharArray();
+    foreach (char c in charArr)
     {
-        return true;
+        if (c == '・')
+            continue;
+        if (c >= '\u4E00' && c <= '\u9FFF')
+        {
+            return true;
+        }
+        if (c >= '\u3040' && c <= '\u309F')
+        {
+            return true;
+        }
+        if (c >= '\u30A0' && c <= '\u30FF')
+        {
+            return true;
+        }
     }
-    else
-    {   
-        return false;
-    }
+    return false;
 }
-
 bool iskoCheck(string str)
+
 {
     char[] charArr = str.ToCharArray();
     foreach (char c in charArr)
     {
-        if (char.GetUnicodeCategory(c) == System.Globalization.UnicodeCategory.OtherLetter)
-        {
+        if ((0xAC00 <= c && c <= 0xD7A3) || (0x3131 <= c && c <= 0x318E))
             return true;
-        }
+
     }
     return false;
 }
@@ -260,6 +290,23 @@ string PapagoTranslate(string TranslateText)
     }
 }
 
+bool CompareCountTextType(List<FieldValue> jp, List<FieldValue> ko)
+{
+    int jpCount = 0, koCount = 0;
+    foreach (var fV in jp)
+    {
+        if (fV.EntryType == "text" && (isjpCheck(fV.EntryValue.ToString()) || iskoCheck(fV.EntryValue.ToString())))
+            jpCount++;
+    }
+    foreach (var fV in ko)
+    {
+        if (fV.EntryType == "text" && (isjpCheck(fV.EntryValue.ToString()) || iskoCheck(fV.EntryValue.ToString())))
+            koCount++;
+    }
+
+    return jpCount == koCount;
+}
+
 void JPtoKR()
 {
     try
@@ -284,21 +331,33 @@ void JPtoKR()
     {
         string koFilePath = koFile;
         string koTargetFilePath = koFilePath.Substring("C:\\Users\\gustj\\Desktop\\유틸리티\\파판14 한글패치\\AllaganNode\\output\\exd".Length + 1);
-        koTargetFilePath = koTargetFilePath.Substring(0, koTargetFilePath.Length - 5);
+        koTargetFilePath = koTargetFilePath.Substring(0, koTargetFilePath.Length - 3);
         string jpFilePath = "";
-
+        string jpTargetFilePath = "";
         int loop = 0;
-        foreach (string jpFile in jpFiles)
+        while (loop <= jpFiles.Length)
         {
-            jpFilePath = jpFile;
-            string jpTargetFilePath = jpFilePath.Substring("C:\\Users\\gustj\\Desktop\\유틸리티\\파판14 한글패치\\AllaganNode\\output\\exd".Length + 1);
-            jpTargetFilePath = jpTargetFilePath.Substring(0, jpTargetFilePath.Length - 5);
+            jpFilePath = jpFiles[loop];
+            jpTargetFilePath = jpFilePath.Substring("C:\\Users\\gustj\\Desktop\\유틸리티\\파판14 한글패치\\AllaganNode\\output\\exd".Length + 1);
+            jpTargetFilePath = jpTargetFilePath.Substring(0, jpTargetFilePath.Length - 3);
             if (jpTargetFilePath == koTargetFilePath)
             {
                 break;
             }
             loop++;
         }
+
+        //foreach (string jpFile in jpFiles)
+        //{
+        //    jpFilePath = jpFile;
+        //    string jpTargetFilePath = jpFilePath.Substring("C:\\Users\\gustj\\Desktop\\유틸리티\\파판14 한글패치\\AllaganNode\\output\\exd".Length + 1);
+        //    jpTargetFilePath = jpTargetFilePath.Substring(0, jpTargetFilePath.Length - 3);
+        //    if (jpTargetFilePath == koTargetFilePath)
+        //    {
+        //        break;
+        //    }
+        //    loop++;
+        //}
         if (loop >= jpFiles.Length) continue;
 
         StreamReader jpsr = new StreamReader(jpFilePath);
@@ -319,21 +378,37 @@ void JPtoKR()
                 if (jp.Fields.Count != target.Fields.Count) continue;
                 for (int i = 0; i < target.Fields.Count; i++)
                 {
-                    if (jp.Fields[i].FieldValue.Count != target.Fields[i].FieldValue.Count) continue;
+                    if (!CompareCountTextType(jp.Fields[i].FieldValue, target.Fields[i].FieldValue)) continue;
+                    int k = 0;
                     for (int j = 0; j < target.Fields[i].FieldValue.Count; j++)
-                        if (jp.Fields[i].FieldValue.Any()
-                            && jp.Fields[i].FieldValue[j].EntryType == "text"
-                            && target.Fields[i].FieldValue[j].EntryType == "text")
+                    {
+                        if (target.Fields[i].FieldValue[j].EntryType == "text"
+                            && (iskoCheck(target.Fields[i].FieldValue[j].EntryValue.ToString())
+                                || isjpCheck(target.Fields[i].FieldValue[j].EntryValue.ToString())))
                         {
-                            if (iskoCheck(target.Fields[i].FieldValue[j].EntryValue.ToString()))
+                            while (k < jp.Fields[i].FieldValue.Count)
                             {
-                                jp.Fields[i].FieldValue[j].EntryValue = target.Fields[i].FieldValue[j].EntryValue;
+                                if (jp.Fields[i].FieldValue[k].EntryType == "text"
+                                    && (iskoCheck(jp.Fields[i].FieldValue[k].EntryValue.ToString())
+                                        || isjpCheck(jp.Fields[i].FieldValue[k].EntryValue.ToString())))
+                                {
+                                    Console.WriteLine(jp.Fields[i].FieldValue[k].EntryValue + " -> " +
+                                                      target.Fields[i].FieldValue[j].EntryValue);
+                                    jp.Fields[i].FieldValue[k].EntryValue =
+                                        target.Fields[i].FieldValue[j].EntryValue;
+                                    k++;
+                                    break;
+                                }
+                                else
+                                {
+                                    k++;
+                                }
                             }
                         }
+                    }
                 }
             }
         }
-        Console.WriteLine(loop + "/" + jpFiles.Length);
         string output = JsonConvert.SerializeObject(jpDataList, Formatting.Indented);
         FileStream fs = File.Create(jpFilePath);
         fs.Close();
@@ -341,6 +416,147 @@ void JPtoKR()
             File.WriteAllText(jpFilePath, output);
     }
 }
+
+void JPtoKRTest()
+{
+    try
+    {
+        koFiles = Directory.GetFiles("C:\\Users\\gustj\\Desktop\\유틸리티\\파판14 한글패치\\AllaganNode\\output\\exd", "ko", SearchOption.AllDirectories);
+    }
+    catch (IOException ex)
+    {
+        Console.WriteLine(ex.Message);
+        return;
+    }
+    try
+    {
+        jpFiles = Directory.GetFiles("C:\\Users\\gustj\\Desktop\\유틸리티\\파판14 한글패치\\AllaganNode\\output\\exd", "ja", SearchOption.AllDirectories);
+    }
+    catch (IOException ex)
+    {
+        Console.WriteLine(ex.Message);
+        return;
+    }
+    foreach (string koFile in koFiles)
+    {
+        string koFilePath = koFile;
+        string koTargetFilePath = koFilePath.Substring("C:\\Users\\gustj\\Desktop\\유틸리티\\파판14 한글패치\\AllaganNode\\output\\exd".Length + 1);
+        koTargetFilePath = koTargetFilePath.Substring(0, koTargetFilePath.Length - 3);
+        string jpFilePath = "";
+        string jpTargetFilePath = "";
+        int loop = 0;
+        while (loop <= jpFiles.Length)
+        {
+            jpFilePath = jpFiles[loop];
+            jpTargetFilePath = jpFilePath.Substring("C:\\Users\\gustj\\Desktop\\유틸리티\\파판14 한글패치\\AllaganNode\\output\\exd".Length + 1);
+            jpTargetFilePath = jpTargetFilePath.Substring(0, jpTargetFilePath.Length - 3);
+            if (jpTargetFilePath == koTargetFilePath)
+            {
+                break;
+            }
+            loop++;
+        }
+
+        if (loop >= jpFiles.Length) continue;
+
+        StreamReader jpsr = new StreamReader(jpFilePath);
+        string jpData = jpsr.ReadToEnd();
+        jpsr.Close();
+        List<datamodel> jpDataList = JsonConvert.DeserializeObject<List<datamodel>>(jpData);
+
+        StreamReader kosr = new StreamReader(koFilePath);
+        string koData = new StreamReader(koFilePath).ReadToEnd();
+        kosr.Close();
+        List<datamodel> koDataList = JsonConvert.DeserializeObject<List<datamodel>>(koData);
+
+        foreach (var jp in jpDataList)
+        {
+            var target = koDataList.Find(x => jp.Key == x.Key);
+            if (target != null)
+            {
+                if (jp.Fields.Count != target.Fields.Count) continue;
+                for (int i = 0; i < target.Fields.Count; i++)
+                {
+                    jp.Fields[i].FieldValue = target.Fields[i].FieldValue;
+                }
+            }
+        }
+        string output = JsonConvert.SerializeObject(jpDataList, Formatting.Indented);
+        FileStream fs = File.Create(jpFilePath);
+        fs.Close();
+        if (File.Exists(jpFilePath))
+            File.WriteAllText(jpFilePath, output);
+    }
+}
+
+void JPtoKRTest2()
+{
+    try
+    {
+        koFiles = Directory.GetFiles("C:\\Users\\gustj\\Desktop\\유틸리티\\파판14 한글패치\\AllaganNode\\output\\exd", "ko", SearchOption.AllDirectories);
+    }
+    catch (IOException ex)
+    {
+        Console.WriteLine(ex.Message);
+        return;
+    }
+    try
+    {
+        jpFiles = Directory.GetFiles("C:\\Users\\gustj\\Desktop\\유틸리티\\파판14 한글패치\\AllaganNode\\output\\exd", "ja", SearchOption.AllDirectories);
+    }
+    catch (IOException ex)
+    {
+        Console.WriteLine(ex.Message);
+        return;
+    }
+    foreach (string koFile in koFiles)
+    {
+        string koFilePath = koFile;
+        string koTargetFilePath = koFilePath.Substring("C:\\Users\\gustj\\Desktop\\유틸리티\\파판14 한글패치\\AllaganNode\\output\\exd".Length + 1);
+        koTargetFilePath = koTargetFilePath.Substring(0, koTargetFilePath.Length - 3);
+        string jpFilePath = "";
+        string jpTargetFilePath = "";
+        int loop = 0;
+        while (loop <= jpFiles.Length)
+        {
+            jpFilePath = jpFiles[loop];
+            jpTargetFilePath = jpFilePath.Substring("C:\\Users\\gustj\\Desktop\\유틸리티\\파판14 한글패치\\AllaganNode\\output\\exd".Length + 1);
+            jpTargetFilePath = jpTargetFilePath.Substring(0, jpTargetFilePath.Length - 3);
+            if (jpTargetFilePath == koTargetFilePath)
+            {
+                break;
+            }
+            loop++;
+        }
+
+        if (loop >= jpFiles.Length) continue;
+
+        StreamReader jpsr = new StreamReader(jpFilePath);
+        string jpData = jpsr.ReadToEnd();
+        jpsr.Close();
+        List<datamodel> jpDataList = JsonConvert.DeserializeObject<List<datamodel>>(jpData);
+
+        StreamReader kosr = new StreamReader(koFilePath);
+        string koData = new StreamReader(koFilePath).ReadToEnd();
+        kosr.Close();
+        List<datamodel> koDataList = JsonConvert.DeserializeObject<List<datamodel>>(koData);
+
+        foreach (var jp in jpDataList)
+        {
+            var target = koDataList.Find(x => jp.Key == x.Key);
+            if (target != null)
+            {
+                jp.Fields = target.Fields;
+            }
+        }
+        string output = JsonConvert.SerializeObject(jpDataList, Formatting.Indented);
+        FileStream fs = File.Create(jpFilePath);
+        fs.Close();
+        if (File.Exists(jpFilePath))
+            File.WriteAllText(jpFilePath, output);
+    }
+}
+
 
 void JPtoPapagoKR()
 {
@@ -357,7 +573,7 @@ void JPtoPapagoKR()
     {
         string jpFilePath = jpFile;
         string jpTargetFilePath = jpFilePath.Substring("C:\\Users\\gustj\\Desktop\\유틸리티\\파판14 한글패치\\AllaganNode\\output\\exd".Length + 1);
-        jpTargetFilePath = jpTargetFilePath.Substring(0, jpTargetFilePath.Length - 5);
+        jpTargetFilePath = jpTargetFilePath.Substring(0, jpTargetFilePath.Length - 3);
 
         StreamReader jpsr = new StreamReader(jpFilePath);
         string jpData = jpsr.ReadToEnd();
@@ -371,25 +587,21 @@ void JPtoPapagoKR()
                 for (int j = 0; j < jp.Fields[i].FieldValue.Count; j++)
                     if (jp.Fields[i].FieldValue[j].EntryType == "text")
                     {
-                        if (isjpCheck(jp.Fields[i].FieldValue[j].EntryValue.ToString()) && iskoCheck(jp.Fields[i].FieldValue[j].EntryValue.ToString()))
+                        if (isjpCheck(jp.Fields[i].FieldValue[j].EntryValue.ToString())
+                            && !jp.Fields[i].FieldValue[j].EntryValue.ToString().Contains("未使用")
+                            && !jpTargetFilePath.Contains("Item"))
                         {
                             string PapagoTranslateTextString =
                                 PapagoTranslate(jp.Fields[i].FieldValue[j].EntryValue.ToString());
                             if (PapagoTranslateTextString != null)
                             {
-                                if (jpTargetFilePath.Contains("Item"))
-                                {
-                                    Console.WriteLine(jp.Fields[i].FieldValue[j].EntryValue + " -> " +
-                                                      PapagoTranslateTextString);
-                                    jp.Fields[i].FieldValue[j].EntryValue +=
-                                        " " + jp.Fields[i].FieldValue[j].EntryValue.ToString();
-                                }
-                                else
-                                {
-                                    Console.WriteLine(jp.Fields[i].FieldValue[j].EntryValue + " -> " +
-                                                      PapagoTranslateTextString);
-                                    jp.Fields[i].FieldValue[j].EntryValue = PapagoTranslateTextString;
-                                }
+                                //Console.WriteLine(jp.Fields[i].FieldValue[j].EntryValue + " -> " +
+                                //                  PapagoTranslateTextString);
+                                //jp.Fields[i].FieldValue[j].EntryValue += "(" + PapagoTranslateTextString + ")";
+                                Console.WriteLine(jp.Fields[i].FieldValue[j].EntryValue + " -> " +
+                                                  PapagoTranslateTextString);
+                                jp.Fields[i].FieldValue[j].EntryValue = PapagoTranslateTextString;
+
                             }
                         }
                     }
@@ -419,7 +631,7 @@ void JPtoWritingSystem()
     {
         string jpFilePath = jpFile;
         string jpTargetFilePath = jpFilePath.Substring("C:\\Users\\gustj\\Desktop\\유틸리티\\파판14 한글패치\\AllaganNode\\output\\exd".Length + 1);
-        jpTargetFilePath = jpTargetFilePath.Substring(0, jpTargetFilePath.Length - 5);
+        jpTargetFilePath = jpTargetFilePath.Substring(0, jpTargetFilePath.Length - 3);
 
         StreamReader jpsr = new StreamReader(jpFilePath);
         string jpData = jpsr.ReadToEnd();
@@ -437,9 +649,9 @@ void JPtoWritingSystem()
                             jp.Fields[i].FieldValue[j].EntryValue.ToString().Replace("퍼센트", "%");
                         jp.Fields[i].FieldValue[j].EntryValue =
                             jp.Fields[i].FieldValue[j].EntryValue.ToString().Replace("에스티니안", "에스티니앙");
-                        jp.Fields[i].FieldValue[j].EntryValue = 
+                        jp.Fields[i].FieldValue[j].EntryValue =
                             jp.Fields[i].FieldValue[j].EntryValue.ToString().Replace("야 슈트라", "야슈톨라");
-                        jp.Fields[i].FieldValue[j].EntryValue = 
+                        jp.Fields[i].FieldValue[j].EntryValue =
                             jp.Fields[i].FieldValue[j].EntryValue.ToString().Replace("우리엔제", "위리앙제");
                     }
             }
@@ -558,10 +770,11 @@ void JPtobackupJP()
 }
 
 //JPtoKR();
+//JPtoKRTest();
+//JPtoKRTest2();
 //JPtobackupJP();
-JPtoPapagoKR();
-//JPtoWritingSystem();
-//JPtoWritingSystem();
+//JPtoPapagoKR();
+JPtoWritingSystem();
 Console.WriteLine("F");
 public class datamodel
 {
